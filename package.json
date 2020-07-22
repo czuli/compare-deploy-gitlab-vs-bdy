@@ -14,8 +14,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll",
-    "eject": "react-scripts eject",
-    "netlify:deploy": "netlify deploy --dir=./build -p -m \"$(git log -1 --pretty=%B)\""
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -24,8 +23,5 @@
     "last 1 chrome version",
     "last 1 firefox version",
     "last 1 safari version"
-  ],
-  "devDependencies": {
-    "netlify-cli": "^2.8.3"
-  }
+  ]
 }
