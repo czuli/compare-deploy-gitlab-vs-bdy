@@ -1,0 +1,18 @@
+ deploy_production:
+   image: node:12
+   stage: deploy
+   environment: Production
+   before_script:
+     - apt-get update -qq && apt-get install -y -qq sshpass rsync
+   script:
+      - npm install --progress=false
+      - npm run build
+      - cd build/
+      - ls
+      - sshpass -V
+      - export SSHPASS=$USER_PASS
+      - sshpass -e rsync -r --omit-dir-times -e "ssh -o StrictHostKeyChecking=no" . ermineadmin@ssh.dhosting.pl:/home/klient.dhosting.pl/ermineadmin/react-gitlab.ermine.pl/
+   artifacts:
+     expire_in: 1 week
+     paths:
+       - build
