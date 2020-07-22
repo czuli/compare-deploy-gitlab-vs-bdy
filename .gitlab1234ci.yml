@@ -16,6 +16,6 @@ deploy:
     - apk add --no-cache rsync openssh
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" >> ~/.ssh/circle_ci_rsa
-    - chmod 600 ~/.ssh/circle_ci_rsa
+    - chmod 644 ~/.ssh/circle_ci_rsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - rsync -rav --delete build/ ermineadmin@ssh.dhosting.pl:/home/klient.dhosting.pl/ermineadmin/react.ermine.pl
