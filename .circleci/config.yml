@@ -8,13 +8,16 @@ jobs:
             - master
     steps:
       - run:
+          name: Build React App
+          command: |
+             npm run build
+      - run:
           name: Install LFTP
           command: |
              apt-get update -qq && apt-get install -y -qq sshpass rsync;
       - run:
-          name: Send Via SFTP
+          name: Send Via SSHPASS
           command: |
-            npm run build
             cd build/
             ls
             sshpass -V
