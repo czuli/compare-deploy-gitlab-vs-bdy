@@ -1,25 +1,40 @@
-version: 2
+version: 2.1
 jobs:
   build:
-    machine:
-      image: circleci/classic:latest
-    branches:
-          only:
-            - master
+    docker:
+      - image: circleci/node:12.9.1-browsers
+
+    working_directory: ~/repo
+
     steps:
-      - run:
-          name: Build React App
-          command: |
-             npm run build
-      - run:
-          name: Install LFTP
-          command: |
-             apt-get update -qq && apt-get install -y -qq sshpass rsync;
-      - run:
-          name: Send Via SSHPASS
-          command: |
-            cd build/
-            ls
-            sshpass -V
-            export SSHPASS=$USER_PASS
-            sshpass -e rsync -r --omit-dir-times -e "ssh -o StrictHostKeyChecking=no" . ermineadmin@ssh.dhosting.pl:/home/klient.dhosting.pl/ermineadmin/react-gitlab.ermine.pl/X
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+            - ~/.npm
+            - ~/.cache
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - snyk/scan:
+          fail-on-issues: false
+          monitor-on-build: false
+          severity-threshold: high
+
+      - run: sudo apt-get update -qq && apt-get install -y -qq sshpass rsync;
+
+      - run: yarn run build
+
+      - run: cd build/
+
+      - run: sshpass -V
+
+      - run: export SSHPASS=$USER_PASS
+      - run: sshpass -e rsync -r --omit-dir-times -e "ssh -o StrictHostKeyChecking=no" . ermineadmin@ssh.dhosting.pl:/home/klient.dhosting.pl/ermineadmin/react-gitlab.ermine.pl/
