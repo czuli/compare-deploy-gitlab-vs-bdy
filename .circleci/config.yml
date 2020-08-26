@@ -10,8 +10,7 @@ jobs:
       - run:
           name: Install LFTP
           command: |
-            sudo apt-get update -qq && apt-get install -y -qq sshpass rsync;
-      - checkout
+             apt-get update -qq && apt-get install -y -qq sshpass rsync;
       - run:
           name: Send Via SFTP
           command: |
